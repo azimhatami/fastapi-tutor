@@ -1,0 +1,8 @@
+# Python
+__pycache__/
+
+# Virtualenv
+venv/
+
+# Vim
+.*.sw[op]
