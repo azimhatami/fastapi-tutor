@@ -10,9 +10,7 @@ async def read_items(
     q: Annotated[
         str | None,
         Query(
-            title='Query string',
-            min_length=3,
-            description = 'Query string for the items to search in the database that have a good match'
+            alias = 'item-query'
         )
     ] = None,
 ):
