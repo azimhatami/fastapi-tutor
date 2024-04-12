@@ -1,15 +1,16 @@
 from typing import Annotated
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Path, Query
 
 app = FastAPI()
 
 
-@app.get("/items/")
+@app.get("/items/{item_id}")
 async def read_items(
-    hidden_query: Annotated[str | None, Query(include_in_schema=False)] = None,
+    item_id: Annotated[int, Path(title='The ID of the item to get', ge=1)],
+    q: str
 ):
-    if hidden_query:
-        return {'hidden_query': hidden_query}
-    else:
-        return {'hidden_query': 'Not found'}
+    results = {"item_id": item_id}
+    if q:
+        results.update({"q": q})
+    return results
