@@ -1,33 +1,25 @@
-from typing import Annotated
+from typing import Any
 
-from fastapi import FastAPI, Path, Query, Body
-from pydantic import BaseModel, Field
+from fastapi import FastAPI
+from pydantic import BaseModel, EmailStr
+
 
 app = FastAPI()
 
 
-class Item(BaseModel):
-    name: str
-    description: str | None = Field(
-        default=None, title='The description of the time', max_length=300
-    )
-    price: float = Field(
-        gt=0, description='The price must be greater than zero'
-    )
-    tax: float | None = None
-
-
-class User(BaseModel):
+class UserIn(BaseModel):
     username: str
+    password: str
+    email: EmailStr
     full_name: str | None = None
 
-@app.put("/items/{item_id}")
-async def update_items(
-    item_id: int,
-    item: Annotated[Item, Body(embed=True)],
-):
-    results = {
-        'item_id': item_id,
-        'item': item
-    }
-    return results
+
+class UserOut(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: str | None = None
+
+
+@app.post('/user/', response_model=UserOut)
+async def create_user(user: UserIn) -> Any:
+    return user
