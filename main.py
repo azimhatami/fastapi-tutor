@@ -9,7 +9,6 @@ class Item(BaseModel):
     description: str | None = None
     price: float
     tax: float = 10.5
-    tags: list[str] = []
 
 
 items = {
@@ -19,23 +18,32 @@ items = {
     },
     'bar': {
         'name': 'Bar',
-        'description': 'The bartenders',
-        'price': 62, 'tax': 20.2
+        'description': 'The Bar fighters',
+        'price': 62,
+        'tax': 20.2
     },
     'baz': {
         'name': 'Baz',
-        'description': None,
+        'description': 'There goes my baz',
         'price': 50.2,
         'tax': 10.5,
-        'tags': []
     },
 }
 
 
 @app.get(
-    '/items/{item_id}',
+    '/items/{item_id}/name',
     response_model = Item,
-    response_model_exclude_unset = True
+    response_model_include = {'name', 'description'},
 )
-async def read_item(item_id: str):
+async def read_item_name(item_id: str):
+    return items[item_id]
+
+
+@app.get(
+    '/items/{item_id}/public',
+    response_model = Item,
+    response_model_exclude = {'tax'}
+)
+async def read_item_public_data(item_id: str):
     return items[item_id]
